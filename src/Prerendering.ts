@@ -20,6 +20,7 @@ export interface BootFunc {
 
 export interface BootFuncParams {
     location: url.Url;          // e.g., Location object containing information '/some/path'
+    options: any;
     origin: string;             // e.g., 'https://example.com:1234'
     url: string;                // e.g., '/some/path'
     absoluteUrl: string;        // e.g., 'https://example.com:1234/some/path'
@@ -32,7 +33,7 @@ export interface BootModuleInfo {
     webpackConfig?: string;
 }
 
-export function renderToString(callback: RenderToStringCallback, applicationBasePath: string, bootModule: BootModuleInfo, absoluteRequestUrl: string, requestPathAndQuery: string) {
+export function renderToString(callback: RenderToStringCallback, applicationBasePath: string, bootModule: BootModuleInfo, absoluteRequestUrl: string, requestPathAndQuery: string, options: any) {
     findBootFunc(applicationBasePath, bootModule, (findBootFuncError, bootFunc) => {
         if (findBootFuncError) {
             callback(findBootFuncError, null);
@@ -48,6 +49,7 @@ export function renderToString(callback: RenderToStringCallback, applicationBase
         const parsedAbsoluteRequestUrl = url.parse(absoluteRequestUrl);
         const params: BootFuncParams = {
             location: url.parse(requestPathAndQuery),
+            options: options || {},
             origin: parsedAbsoluteRequestUrl.protocol + '//' + parsedAbsoluteRequestUrl.host,
             url: requestPathAndQuery,
             absoluteUrl: absoluteRequestUrl,
